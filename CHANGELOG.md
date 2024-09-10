@@ -14,5 +14,5 @@
     - Shared Secrets Generation for ECDH
     - Multibase encoding and decoding
     - Hash algorithms
-- DataModel
+- DataModel SDK
     - Value object for Mobile Wallet (DID, VC, VP, Profile, etc)
