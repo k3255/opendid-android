@@ -2,11 +2,12 @@
  * Copyright 2024 Raonsecure
  */
 
-package org.omnione.did.sdk.walletcore;
+package org.omnione.did.sdk.core;
 
 import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -16,21 +17,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omnione.did.sdk.datamodel.util.MessageUtil;
 import org.omnione.did.sdk.datamodel.common.enums.AlgorithmType;
-import org.omnione.did.sdk.datamodel.common.enums.ProofType;
 import org.omnione.did.sdk.datamodel.vc.VerifiableCredential;
 import org.omnione.did.sdk.datamodel.vp.VerifiablePresentation;
 import org.omnione.did.sdk.utility.CryptoUtils;
 import org.omnione.did.sdk.utility.DataModels.MultibaseType;
 import org.omnione.did.sdk.utility.MultibaseUtils;
-import org.omnione.did.sdk.walletcore.didmanager.DIDManager;
-import org.omnione.did.sdk.walletcore.keymanager.KeyManager;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.DetailKeyInfo;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.KeyGenWalletMethodType;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.StorageOption;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.WalletKeyGenRequest;
-import org.omnione.did.sdk.walletcore.vcmanager.VCManager;
-import org.omnione.did.sdk.walletcore.vcmanager.datamodel.ClaimInfo;
-import org.omnione.did.sdk.walletcore.vcmanager.datamodel.PresentationInfo;
+import org.omnione.did.sdk.core.didmanager.DIDManager;
+import org.omnione.did.sdk.core.keymanager.KeyManager;
+import org.omnione.did.sdk.core.keymanager.datamodel.DetailKeyInfo;
+import org.omnione.did.sdk.core.keymanager.datamodel.KeyGenWalletMethodType;
+import org.omnione.did.sdk.core.keymanager.datamodel.StorageOption;
+import org.omnione.did.sdk.core.keymanager.datamodel.WalletKeyGenRequest;
+import org.omnione.did.sdk.core.vcmanager.VCManager;
+import org.omnione.did.sdk.core.vcmanager.datamodel.ClaimInfo;
+import org.omnione.did.sdk.core.vcmanager.datamodel.PresentationInfo;
 
 import java.util.ArrayList;
 import java.util.List;

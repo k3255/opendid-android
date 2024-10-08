@@ -2,7 +2,7 @@
  * Copyright 2024 Raonsecure
  */
 
-package org.omnione.did.sdk.walletcore;
+package org.omnione.did.sdk.core;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,25 +14,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omnione.did.sdk.datamodel.common.enums.AlgorithmType;
 import org.omnione.did.sdk.datamodel.common.enums.VerifyAuthType;
-import org.omnione.did.sdk.datamodel.did.DIDDocument;
 import org.omnione.did.sdk.utility.DataModels.DigestEnum;
 import org.omnione.did.sdk.utility.DataModels.MultibaseType;
 import org.omnione.did.sdk.utility.DigestUtils;
 import org.omnione.did.sdk.utility.MultibaseUtils;
-import org.omnione.did.sdk.walletcore.common.KeystoreManager;
-import org.omnione.did.sdk.walletcore.didmanager.DIDManager;
-import org.omnione.did.sdk.walletcore.keymanager.KeyManager;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.DetailKeyInfo;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.KeyGenWalletMethodType;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.KeyInfo;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.KeyStoreAccessMethod;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.SecureKeyGenRequest;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.StorageOption;
-import org.omnione.did.sdk.walletcore.keymanager.datamodel.WalletKeyGenRequest;
-import org.omnione.did.sdk.walletcore.keymanager.supportalgorithm.Secp256R1Manager;
-import org.omnione.did.sdk.walletcore.storagemanager.StorageManager;
-import org.omnione.did.sdk.walletcore.storagemanager.datamodel.FileExtension;
-import org.omnione.did.sdk.walletcore.storagemanager.datamodel.UsableInnerWalletItem;
+import org.omnione.did.sdk.core.common.KeystoreManager;
+import org.omnione.did.sdk.core.keymanager.KeyManager;
+import org.omnione.did.sdk.core.keymanager.datamodel.DetailKeyInfo;
+import org.omnione.did.sdk.core.keymanager.datamodel.KeyGenWalletMethodType;
+import org.omnione.did.sdk.core.keymanager.datamodel.KeyInfo;
+import org.omnione.did.sdk.core.keymanager.datamodel.KeyStoreAccessMethod;
+import org.omnione.did.sdk.core.keymanager.datamodel.SecureKeyGenRequest;
+import org.omnione.did.sdk.core.keymanager.datamodel.StorageOption;
+import org.omnione.did.sdk.core.keymanager.datamodel.WalletKeyGenRequest;
+import org.omnione.did.sdk.core.keymanager.supportalgorithm.Secp256R1Manager;
+import org.omnione.did.sdk.core.storagemanager.StorageManager;
+import org.omnione.did.sdk.core.storagemanager.datamodel.FileExtension;
+import org.omnione.did.sdk.core.storagemanager.datamodel.UsableInnerWalletItem;
 
 import java.util.ArrayList;
 import java.util.List;
