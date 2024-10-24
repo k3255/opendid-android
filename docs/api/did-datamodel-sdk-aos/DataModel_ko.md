@@ -15,7 +15,7 @@ puppeteer:
         fullPage: false
 ---
 
-Android DataModel SDK API
+Android DataModel SDK
 ==
 
 - 주제: DataModel
@@ -26,33 +26,34 @@ Android DataModel SDK API
 | 버전   | 일자       | 변경 내용                 |
 | ------ | ---------- | -------------------------|
 | v1.0.0 | 2024-07-11 | 초기 작성                 |
+| v1.0.1 | 2024-09-03 | Service Vo 추가           |
 
 
 
 <div style="page-break-after: always;"></div>
 
 
-# Contents
-- [Models](#models)
+# 목차
+- [CoreVo](#corevo)
     - [1. DIDDocument](#1-diddocument)
         - [1.1. VerificationMethod](#11-verificationmethod)
-        - [1.2 Service](#12-service)
+        - [1.2. Service](#12-service)
     - [2. VerifiableCredential](#2-verifiablecredential)
-        - [2.1 Issuer](#21-issuer)
-        - [2.2 Evidence](#22-evidence)
-        - [2.3 CredentialSchema](#23-credentialschema)
-        - [2.4 CredentialSubject](#24-credentialsubject)
-        - [2.5 Claim](#25-claim)
-        - [2.6 Internationalization](#26-internationalization)
+        - [2.1. Issuer](#21-issuer)
+        - [2.2. Evidence](#22-evidence)
+        - [2.3. CredentialSchema](#23-credentialschema)
+        - [2.4. CredentialSubject](#24-credentialsubject)
+        - [2.5. Claim](#25-claim)
+        - [2.6. Internationalization](#26-internationalization)
     - [3. VerifiablePresentation](#3-verifiablepresentation)
     - [4. Proof](#4-proof)
         - [4.1 VCProof](#41-vcproof)
     - [5. Profile](#5-profile)
-        - [5.1. IssuerProfile](#51-issuerprofile)
-            - [5.1.1. Profle](#511-profile)
+        - [5.1. IssueProfile](#51-issueprofile)
+            - [5.1.1. Profile](#511-profile)
                 - [5.1.1.1. CredentialSchema](#5111-credentialschema)
                 - [5.1.1.2. Process](#5112-process)
-        - [5.2 VerifyProfile](#51-verifyprofile)
+        - [5.2 VerifyProfile](#52-verifyprofile)
             - [5.2.1. Profile](#521-profile)
                 - [5.2.1.1. ProfileFilter](#5211-profilefilter)
                     - [5.2.1.1.1. CredentialSchema](#52111-credentialschema)
@@ -66,6 +67,46 @@ Android DataModel SDK API
             - [6.2.1. Claim](#621-claim)
                 - [6.2.1.1. Namespace](#6211-namespace)
                 - [6.2.1.2. ClaimDef](#6212-claimdef)
+- [SeviceVo](#servicevo)
+    - [1. Protocol](#1-protocol)
+        - [1.1. BaseRequest](#11-baserequest)
+            - [1.1.1. P131RequestVo](#111-p131requestvo)
+            - [1.1.2. P132RequestVo](#112-p132requestvo)
+            - [1.1.3. P210RequestVo](#113-p210requestvo)
+            - [1.1.4. P310RequestVo](#114-p310requestvo)
+        - [1.2. BaseResponse](#12-baseresponse)
+            - [1.2.1. P131ResponseVo](#121-p131responsevo)
+            - [1.2.2. P132ResponseVo](#122-p132responsevo)
+            - [1.2.3. P210ResponseVo](#123-p210responsevo)
+            - [1.2.4. P310ResponseVo](#124-p310responsevo)
+    - [2. Token](#2-token)
+        - [2.1. ServerTokenSeed](#21-servertokenseed)
+            - [2.1.1. AttestedAppInfo](#211-attestedappinfo)
+                - [2.1.1.1. provider](#2111-provider)
+            - [2.1.2. SignedWalletInfo](#212-signedwalletinfo)
+                - [2.1.2.1. Wallet](#2121-wallet)
+        - [2.2. ServerTokenData](#22-servertokendata)
+        - [2.3. WalletTokenSeed](#23-wallettokenseed)
+        - [2.4. WalletTokenData](#24-wallettokendata)
+    - [3. SecurityChannel](#3-securitychannel)
+        - [3.1. ReqEcdh](#31-reqecdh)
+        - [3.2. AccEcdh](#32-accecdh)
+        - [3.3. AccE2e](#33-acce2e)
+        - [3.4. E2e](#34-e2e)
+        - [3.5. DIDAuth](#35-didauth)
+    - [4. DIDDoc](#4-diddoc)
+        - [4.1. DidDocVo](#41-diddocvo)
+        - [4.2. AttestedDidDoc](#42-attesteddiddoc)
+        - [4.3. SignedDidDoc](#43-signeddiddoc)
+    - [5. Offer](#5-offer)
+        - [5.1. IssueOfferPayload](#51-issueofferpayload)
+        - [5.2. VerifyOfferPayload](#52-verifyofferpayload)
+    - [6. Issue VC](#6-issue-vc)
+        - [6.1. ReqVC](#61-reqvc)
+            - [6.1.1. Profile](#611-profile)
+        - [6.2. VCPlanList](#62-vcplanlist)
+            - [6.2.1. VCPlan](#621-vcplan)
+                - [6.2.1.1. Option](#6211-option)
 - [Enumerators](#enumerators)
     - [1. DID_KEY_TYPE](#1-did_key_type)
     - [2. DID_SERVICE_TYPE](#2-did_service_type)
@@ -80,16 +121,22 @@ Android DataModel SDK API
     - [11. CLAIM_FORMAT](#11-claim_format)
     - [12. LOCATION](#12-location)
     - [13. SYMMETRIC_PADDING_TYPE](#13-symmetric_padding_type)
-    - [14. SYMMETRIC_CIPHER_TYPE](#4-symmetric_cipher_type)
+    - [14. SYMMETRIC_CIPHER_TYPE](#14-symmetric_cipher_type)
     - [15. ALGORITHM_TYPE](#15-algorithm_type)
     - [16. CREDENTIAL_SCHEMA_TYPE](#16-credential_schema_type)
     - [17. ELLIPTIC_CURVE_TYPE](#17-elliptic_curve_type)
     - [18. VERIFY_AUTH_TYPE](#18-verify_auth_type)
+    - [19. ROLE_TYPE](#19-role_type)
+    - [20. SERVER_TOKEN_PURPOSE](#20-server_token_purpose)
+    - [21. WALLET_TOKEN_PURPOSE](#21-wallet_token_purpose)
 - [Apis](#apis)
     - [1. deserialize](#1-deserialize)
     - [2. convertFrom](#2-convertfrom)
     - [3. convertTo](#3-convertto)
-# Models
+
+<br>
+
+# CoreVo
 
 ## 1. DIDDocument
 
@@ -198,7 +245,7 @@ public class Service {
 |-----------------|----------------|----------------------------|---------|---------------------------|
 | id              | String         | 서비스 id                 |    M    |                           | 
 | type            | DID_SERVICE_TYPE | 서비스 종류               |    M    | [DID_SERVICE_TYPE](#2-did_service_type)| 
-| serviceEndpoint | List\<String>       | List of 서비스로의 URL 목록 |    M    |                           | 
+| serviceEndpoint | List\<String>       | 서비스로의 URL 목록 |    M    |                           | 
 
 <br>
 
@@ -254,11 +301,11 @@ public class VerifiableCredential {
 
 ## 2.1 Issuer
 
-## Description
+### Description
 
 `이슈어 정보`
 
-## Declaration
+### Declaration
 
 ```java
 public class Issuer {
@@ -280,11 +327,11 @@ public class Issuer {
 
 ## 2.2 Evidence
 
-## Description
+### Description
 
 `증거 서류 확인`
 
-## Declaration
+### Declaration
 
 ```java
 public class Evidence {
@@ -312,11 +359,11 @@ public class Evidence {
 
 ## 2.3 CredentialSchema
 
-## Description
+### Description
 
 `Credential schema`
 
-## Declaration
+### Declaration
 
 ```java
 public class CredentialSchema {
@@ -336,11 +383,11 @@ public class CredentialSchema {
 
 ## 2.4 CredentialSubject
 
-## Description
+### Description
 
 `Credential subject`
 
-## Declaration
+### Declaration
 
 ```java
 public class CredentialSubject {
@@ -360,11 +407,11 @@ public class CredentialSubject {
 
 ## 2.5 Claim
 
-## Description
+### Description
 
 `주체 정보`
 
-## Declaration
+### Declaration
 
 ```java
 public class Claim {
@@ -398,18 +445,17 @@ public class Claim {
 
 ## 2.6 Internationalization
 
-## Description
+### Description
 
 `국제화`
 
-## Declaration
+### Declaration
 
 ```java
 public class Internationalization {
     String caption;
     String value;
     String digestSRI;
-
 }
 ```
 
@@ -446,7 +492,6 @@ public class VerifiablePresentation {
     Proof proof;
     List<Proof> proofs;
 }
-
 ```
 
 ### Property
@@ -525,11 +570,11 @@ public class VCProof extends Proof {
 
 ## 5. Profile
 
-## 5.1 IssuerProfile
+## 5.1 IssueProfile
 
 ### Description
 
-`발급처 프로파일`
+`발급 프로파일`
 
 ### Declaration
 
@@ -1043,6 +1088,960 @@ public class ClaimDef {
 
 <br>
 
+# ServiceVo
+
+## 1. Protocol
+
+## 1.1. BaseRequest
+
+### Description
+
+`각 요청 프로토콜 객체는 해당 추상 클래스를 상속하며, 프로토콜 메시지의 기본 클래스 역할을 한다.`
+
+### Declaration
+
+```java
+public abstract class BaseRequestVo {
+    String id;
+    String txId;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| id            | String | 메시지 ID         |    M    | 
+| txId  | String | 거래 ID         |    O    | 
+
+<br>
+
+
+## 1.1.1. P131RequestVo
+
+### Description
+
+`월렛 등록 프로토콜을 위한 요청 객체`
+
+### Declaration
+
+```java
+public class P131RequestVo extends BaseRequestVo {
+    AttestedDidDoc attestedDidDoc;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| attestedDidDoc  | AttestedDidDoc | 제공자 인증된 DID 문서          |    M    | [AttestedDidDoc](#42-attesteddiddoc) |
+
+<br>
+
+## 1.1.2. P132RequestVo
+
+### Description
+
+`사용자 등록 프로토콜을 위한 요청 객체`
+
+### Declaration
+
+```java
+public class P132RequestVo extends BaseRequestVo {
+    AttestedDidDoc attestedDIDDoc;
+    ReqEcdh reqEcdh;
+    ServerTokenSeed seed;
+    SignedDidDoc signedDidDoc;
+    String serverToken;
+    String iv;
+    String kycTxId;
+}
+```
+
+### Property
+
+| Name            | Type              | Description                   | **M/O** | **Note** |
+|-----------------|-------------------|--------------------------------|---------|----------|
+| attestedDIDDoc  | AttestedDidDoc     | 제공자의 인증된 DID 문서          |    M    | [AttestedDidDoc](#42-attesteddiddoc) |
+| reqEcdh         | ReqEcdh            | ECDH 요청 데이터               |    M    | [ReqEcdh](#31-reqecdh) |
+| seed            | ServerTokenSeed    | 서버 토큰 시드                 |    M    | [ServerTokenSeed](#21-servertokenseed) |
+| signedDidDoc    | SignedDidDoc       | 서명된 DID 문서                |    M    | [SignedDidDoc](#43-signeddiddoc) |
+| serverToken     | String             | 서버 토큰                      |    M    |          |
+| iv              | String             | 초기화 벡터                    |    M    |          |
+| kycTxId         | String             | KYC 거래 ID                |    M    |          |
+<br>
+
+## 1.1.3. P210RequestVo
+
+### Description
+
+`VC 발급 프로토콜을 위한 요청 객체`
+
+### Declaration
+
+```java
+public class P210RequestVo extends BaseRequestVo {
+    String vcPlanId;
+    String issuer;
+    String offerId;
+    ReqEcdh reqEcdh;
+    ServerTokenSeed seed;
+    String serverToken;
+    DIDAuth didAuth;
+    AccE2e accE2e;
+    String encReqVc;
+    String vcId;
+}
+```
+
+### Property
+
+| Name         | Type             | Description                   | **M/O** | **Note** |
+|--------------|------------------|--------------------------------|---------|----------|
+| vcPlanId     | String            | VC Plan ID                 |    M    |          |
+| issuer       | String            | 발급처 DID                     |    M    |          |
+| offerId      | String            | Offer ID                        |    M    |          |
+| reqEcdh      | ReqEcdh           | ECDH 요청 데이터               |    M    | [ReqEcdh](#31-reqecdh) |
+| seed         | ServerTokenSeed   | 서버 토큰 시드                 |    M    | [ServerTokenSeed](#21-servertokenseed) |
+| serverToken  | String            | 서버 토큰                      |    M    |          |
+| didAuth      | DIDAuth           | DID Auth 데이터                |    M    | [DIDAuth](#35-didauth) |
+| accE2e       | AccE2e            | E2E 암호화 데이터              |    M    | [AccE2e](#33-acce2e) |
+| encReqVc     | String            | 암호화 VC 요청 데이터    |    M    |          |
+| vcId         | String            | VC ID                      |    M    |          |
+
+<br>
+
+## 1.1.4. P310RequestVo
+
+### Description
+
+`VP 제출 프로토콜을 위한 요청 객체`
+
+### Declaration
+
+```java
+public class P310RequestVo extends BaseRequestVo {
+    String offerId;
+    ReqEcdh reqEcdh;
+    AccE2e accE2e;
+    String encVp;
+}
+```
+
+### Property
+
+| Name     | Type             | Description                      | **M/O** | **Note** |
+|----------|------------------|----------------------------------|---------|----------|
+| offerId  | String            | Offer ID  |    M    |          |
+| reqEcdh  | ReqEcdh           | ECDH 요청 데이터                 |    M    | [ReqEcdh](#31-reqecdh) |
+| accE2e   | AccE2e            | E2E 수락 데이터       |    M    | [AccE2e](#33-acce2e) |
+| encVp    | String            | 암호화된 VP |    M    |          |
+
+<br>
+
+## 1.2. BaseResponse
+
+### Description
+
+`각 응답 프로토콜 객체는 해당 추상 클래스를 상속하며, 프로토콜 메시지의 기본 클래스 역할을 한다.`
+
+### Declaration
+
+```java
+public abstract class BaseResponseVo {
+    String txId;
+    Integer code;
+    String message;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| txId            | String | 거래 ID         |    M    | 
+| code  | Integer | 에러코드         |    M    | 
+| message  | String | 에러메시지         |    M    | 
+
+<br>
+
+## 1.2.1. P131ResponseVo
+
+### Description
+
+`월렛 등록 프로토콜을 위한 응답 객체`
+
+### Declaration
+
+```java
+public class P131ResponseVo extends BaseResponseVo {}
+```
+
+### Property
+N/A
+
+<br>
+
+
+## 1.2.2. P132ResponseVo
+
+### Description
+
+`사용자 등록 프로토콜을 위한 응답 객체`
+
+### Declaration
+
+```java
+public class P132ResponseVo extends BaseResponseVo {
+    String iv;
+    String encStd;
+    AccEcdh accEcdh;
+}
+```
+
+### Property
+
+| Name     | Type     | Description                   | **M/O** | **Note** |
+|----------|----------|-------------------------------|---------|----------|
+| iv       | String   | 초기화 벡터                   |    M    |          |
+| encStd   | String   | 암호화된 서버 토큰 데이터       |    M    |          |
+| accEcdh  | AccEcdh  | ECDH 수락 데이터              |    M    | [AccEcdh](#32-accecdh) |
+
+<br>
+
+## 1.2.3. P210ResponseVo
+
+### Description
+
+`VC 발급 프로토콜을 위한 응답 객체`
+
+### Declaration
+
+```java
+public class P210ResponseVo extends BaseResponseVo {
+    String refId;
+    AccEcdh accEcdh;
+    String iv;
+    String encStd;
+    String authNonce;
+    IssueProfile profile;
+    E2e e2e;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                      | **M/O** | **Note** |
+|------------|----------------|----------------------------------|---------|----------|
+| refId      | String          | 참조 ID                          |    M    |          |
+| accEcdh    | AccEcdh         | ECDH 수락 데이터                 |    M    | [AccEcdh](#32-accecdh) |
+| iv         | String          | 초기화 벡터                     |    M    |          |
+| encStd     | String          | 암호화된 서버 토큰 데이터        |    M    |          |
+| authNonce  | String          | 인증 nonce                       |    M    |          |
+| profile    | IssueProfile    | 발급 프로파일                      |    M    |[IssueProfile](#51-issueprofile)          |
+| e2e        | E2e             | E2E 암호화 데이터                |    M    | [E2e](#34-e2e) |
+
+<br>
+
+## 1.2.4. P310ResponseVo
+
+### Description
+
+`VP 제출 프로토콜을 위한 응답 객체`
+
+### Declaration
+
+```java
+public class P310ResponseVo extends BaseResponseVo {
+    VerifyProfile profile;
+}
+```
+
+### Property
+
+| Name    | Type           | Description                      | **M/O** | **Note** |
+|---------|----------------|----------------------------------|---------|----------|
+| profile | VerifyProfile   |검증 프로파일             |    M    | [VerifyProfile](#52-verifyprofile)         |
+
+<br>
+
+## 2. Token
+## 2.1. ServerTokenSeed
+
+### Description
+
+`서버 토큰 시드`
+
+### Declaration
+
+```java
+public class ServerTokenSeed {
+    SERVER_TOKEN_PURPOSE purpose;
+    SignedWalletInfo walletInfo;
+    AttestedAppInfo caAppInfo;
+}
+```
+
+### Property
+
+| Name        | Type                                          | Description                   | **M/O** | **Note** |
+|-------------|-----------------------------------------------|-------------------------------|---------|----------|
+| purpose     | SERVER_TOKEN_PURPOSE       | 서버 토큰 목적        |    M    | [ServerTokenPurpose](#20-server_token_purpose) |
+| walletInfo  | SignedWalletInfo                              | 서명된 월렛 정보        |    M    | [SignedWalletInfo](#212-signedwalletinfo) |
+| caAppInfo   | AttestedAppInfo                               | 인증된 앱 정보          |    M    | [AttestedAppInfo](#211-attestedappinfo) |
+
+<br>
+
+## 2.1.1. AttestedAppInfo
+
+### Description
+
+`인증된 앱 정보`
+
+
+### Declaration
+
+```java
+public class AttestedAppInfo {
+    String appId;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name     | Type     | Description                   | **M/O** | **Note**                  |
+|----------|----------|-------------------------------|---------|---------------------------|
+| appId    | String   | 인가앱 ID           |    M    |                            |
+| provider | Provider | 인가앱 정보             |    M    | [Provider](#2111-provider)      |
+| nonce    | String   | Nonce        |    M    |                            |
+| proof    | Proof    | Proof              |    O    | [Proof](#4-proof)          |     
+
+<br>
+
+## 2.1.1.1. Provider
+
+### Description
+
+`제공자 정보`
+
+### Declaration
+
+```java
+public class Provider {
+    String did;
+    String certVcRef;
+}
+```
+
+### Property
+
+| Name       | Type   | Description             | **M/O** | **Note** |
+|------------|--------|-------------------------|---------|----------|
+| did        | String | 제공자 DID    |    M    |          |
+| certVcRef  | String | 가입증명서 VC URL |    M    |          |
+
+<br>
+
+## 2.1.2. SignedWalletInfo
+
+### Description
+
+`서명된 월렛 정보`
+
+### Declaration
+
+```java
+public class SignedWalletInfo {
+    Wallet wallet;
+    String nonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| wallet     | Wallet          | 월렛 정보                 |    M    | [Wallet](#2121-wallet) |
+| nonce      | String          | Nonce                      |    M    |          |
+| proof      | Proof           | Proof                    |    O    | [Proof](#4-proof) |
+| proofs     | List<Proof>     | Proof 목록               |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 2.1.2.1. Wallet
+
+### Description
+
+`월렛 정보`
+
+### Declaration
+
+```java
+public class Wallet {
+    String id;
+    String did;
+}
+```
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| id         | String          | 월렛 ID  |    M    |          |
+| did        | String          | 월렛 제공자 DID |    M    |          |
+
+<br>
+
+## 2.2. ServerTokenData
+
+### Description
+
+`서버 토큰 데이터`
+
+### Declaration
+
+```java
+public class ServerTokenData {
+    SERVER_TOKEN_PURPOSE purpose;
+    String walletId;
+    String appId;
+    String validUntil;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type                                         | Description                   | **M/O** | **Note** |
+|------------|----------------------------------------------|-------------------------------|---------|----------|
+| purpose    | SERVER_TOKEN_PURPOSE      | 서버토큰목적   |    M    | [ServerTokenPurpose](#20-server_token_purpose) |
+| walletId   | String                                       | 월렛 ID |    M    |          |
+| appId      | String                                       | 인가앱 ID    |    M    |          |
+| validUntil | String                                       | 서버토큰 유효시간  |    M    |          |
+| provider   | Provider                                     | 제공자 정보          |    M    | [Provider](#2111-provider) |
+| nonce      | String                                       | Nonce                   |    M    |          |
+| proof      | Proof                                        | Proof                  |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 2.3. WalletTokenSeed
+
+### Description
+
+`월렛 토큰 시드`
+
+### Declaration
+
+```java
+public class WalletTokenSeed {
+    WalletTokenPurpose.WALLET_TOKEN_PURPOSE purpose;
+    String pkgName;
+    String nonce;
+    String validUntil;
+    String userId;
+}
+```
+
+### Property
+
+| Name       | Type                                        | Description                       | **M/O** | **Note** |
+|------------|---------------------------------------------|-----------------------------------|---------|----------|
+| purpose    | WALLET_TOKEN_PURPOSE     | 월렛토큰목적     |    M    | [WalletTokenPurpose](#21-wallet_token_purpose) |
+| pkgName    | String                                      | 인가앱 패키지명 |    M    |      |
+| nonce      | String                                      | Nonce                        |    M    |          |
+| validUntil | String                                      | 월렛토큰 유효시간      |    M    |          |
+| userId     | String                                      | 사용자 ID |    M    |          |
+
+<br>
+
+
+## 2.4. WalletTokenData
+
+### Description
+
+`월렛 토큰 데이터`
+
+### Declaration
+
+```java
+public class WalletTokenData {
+    WalletTokenSeed seed;
+    String sha256_pii;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type             | Description                   | **M/O** | **Note** |
+|------------|------------------|-------------------------------|---------|----------|
+| seed       | WalletTokenSeed   | 월렛 토큰 시드                 |    M    | [WalletTokenSeed](#23-wallettokenseed) |
+| sha256_pii | String            | PII의 SHA-256 해시             |    M    |          |
+| provider   | Provider          | 제공자 정보                    |    M    | [Provider](#2111-provider) |
+| nonce      | String            | Nonce                    |    M    |          |
+| proof      | Proof             | Proof                  |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3. SecurityChannel
+
+## 3.1. ReqEcdh
+
+### Description
+
+`ECDH 요청 데이터`
+
+### Declaration
+
+```java
+public class ReqEcdh implements ProofContainer {
+    String client;
+    String clientNonce;
+    EllipticCurveType.ELLIPTIC_CURVE_TYPE curve;
+    String publicKey;
+    Ciphers candidate;
+    Proof proof;
+    List<Proof> proofs;
+
+    public static class Ciphers {
+        List<SymmetricCipherType.SYMMETRIC_CIPHER_TYPE> ciphers;
+    }
+}
+```
+
+### Property
+
+| Name        | Type                             | Description                               | **M/O** | **Note** |
+|-------------|----------------------------------|-------------------------------------------|---------|----------|
+| client      | String                           | 클라이언트 DID                         |    M    |          |
+| clientNonce | String                           | 클라이언트 Nonce              |    M    |          |
+| curve       | ELLIPTIC_CURVE_TYPE | ECDH 커브타입                      |    M    |          |
+| publicKey   | String                           | 공개키                     |    M    |          |
+| candidate   | ReqEcdh.Ciphers                  |  대칭키 암호화 정보                         |    O    |          |
+| proof       | Proof                            | Proof                   |    M    | [Proof](#4-proof) |
+| proofs      | List<Proof>                      |  Proof 목록                            |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3.2. AccEcdh
+
+### Description
+
+`ECDH 수락 데이터`
+
+### Declaration
+
+```java
+public class AccEcdh {
+    String server;
+    String serverNonce;
+    String publicKey;
+    SymmetricCipherType.SYMMETRIC_CIPHER_TYPE cipher;
+    SymmetricPaddingType.SYMMETRIC_PADDING_TYPE padding;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name        | Type                                       | Description                        | **M/O** | **Note** |
+|-------------|--------------------------------------------|------------------------------------|---------|----------|
+| server      | String                                     | 서버 ID                  |    M    |          |
+| serverNonce | String                                     | 서버 Nonce                       |    M    |          |
+| publicKey   | String                                     | 공개키       |    M    |          |
+| cipher      | SymmetricCipherType.SYMMETRIC_CIPHER_TYPE  | 암호화 종류         |    M    |          |
+| padding     | SymmetricPaddingType.SYMMETRIC_PADDING_TYPE| 패딩 종류        |    M    |          |
+| proof       | Proof                                      | Key agreement proof                |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3.3. AccE2e
+
+### Description
+
+`E2E 수락 데이터`
+
+### Declaration
+
+```java
+public class AccE2e {
+    String publicKey;
+    String iv;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type               | Description                | **M/O** | **Note**               |
+|------------|--------------------|----------------------------|---------|------------------------|
+| publicKey  | String              | 공개키  |    M    | |
+| iv         | String              | 초기화 벡터      |    M    | |
+| proof      | Proof               | Key agreement proof        |    O    | [Proof](#4-proof)       |
+| proofs     | List<Proof>         | proof 목록            |    O    | [Proof](#4-proof)       |
+
+<br>
+
+## 3.4. E2e
+
+### Description
+
+`E2E 암호화 정보`
+
+### Declaration
+
+```java
+public class E2e {
+    String iv;
+    String encVc;
+}
+```
+
+### Property
+
+| Name  | Type   | Description                      | **M/O** | **Note** |
+|-------|--------|----------------------------------|---------|----------|
+| iv    | String | 초기화 벡터       |    M    |          |
+| encVc | String | 암호화된 VC  |    M    |          |
+
+<br>
+
+## 3.5. DIDAuth
+
+### Description
+
+`DID Auth 데이터`
+
+### Declaration
+
+```java
+public class DIDAuth {
+    String did;
+    String authNonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type       | Description                        | **M/O** | **Note**                  |
+|------------|------------|------------------------------------|---------|---------------------------|
+| did        | String     | 대상 DID     |    M    |                            |
+| authNonce  | String     | Auth nonce      |    M    |                            |
+| proof      | Proof      | 인증 proof               |    M    | [Proof](#4-proof)          |
+| proofs     | List<Proof>| 인증 proof 목록      |    M    | [Proof](#4-proof)          |
+
+<br>
+
+## 4. DidDoc
+## 4.1. DidDocVo
+
+### Description
+
+`인코딩된 DID 문서`
+
+### Declaration
+
+```java
+public class DidDocVo {
+    String didDoc;
+}
+```
+
+### Property
+
+| Name   | Type   | Description            | **M/O** | **Note** |
+|--------|--------|------------------------|---------|----------|
+| didDoc | String | 인코딩된 DID 문서 |    M    |          |
+
+<br>
+
+## 4.2. AttestedDidDoc
+
+### Description
+
+`제공자의 인증된 DID 문서 `
+
+### Declaration
+
+```java
+public class AttestedDidDoc {
+    String walletId;
+    String ownerDidDoc;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type     | Description                     | **M/O** | **Note**                  |
+|------------|----------|---------------------------------|---------|---------------------------|
+| walletId   | String   | 월렛 ID               |    M    |                            |
+| ownerDidDoc| String   | 소유자의 DID 문서            |    M    |                            |
+| provider   | Provider | 제공자 정보            |    M    | [Provider](#2111-provider)      |
+| nonce      | String   | Nonce |    M    |                            |
+| proof      | Proof    | Attestation proof               |    M    | [Proof](#4-proof)          |
+
+<br>
+
+## 4.3. SignedDidDoc
+
+### Description
+
+`서명된 DID 문서`
+
+### Declaration
+
+```java
+public class SignedDidDoc {
+    String ownerDidDoc;
+    Wallet wallet;
+    String nonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| ownerDidDoc| String          | 소유자의 DID document       |    M    |          |
+| wallet     | Wallet          | 월렛 정보         |    M    | [Wallet](#2121-wallet) |
+| nonce      | String          | Nonce                |    M    |          |
+| proof      | Proof           | Proof               |    M    | [Proof](#4-proof) |
+| proofs     | List<Proof>     | Proof 목록             |    M    | [Proof](#4-proof) |
+
+<br>
+
+## 5. Offer
+## 5.1. IssueOfferPayload
+
+### Description
+
+`발급오퍼 페이로드`
+
+### Declaration
+
+```java
+public class IssueOfferPayload {
+    String offerId;
+    String vcPlanId;
+    String issuer;
+    String validUntil;
+}
+```
+
+### Property
+
+| Name      | Type   | Description                   | **M/O** | **Note** |
+|-----------|--------|-------------------------------|---------|----------|
+| offerId   | String | Offer ID |    M    |          |
+| vcPlanId  | String | VC Plan ID  |    M    |          |
+| issuer    | String | 발급처 DID      |    M    |          |
+| validUntil| String | 유효시간          |    M    |          |
+
+<br>
+
+## 5.2. VerifyOfferPayload
+
+### Description
+
+`제출오퍼 페이로드`
+
+### Declaration
+
+```java
+public class VerifyOfferPayload {
+    String offerId;
+    OFFER_TYPE type;
+    PRESENT_MODE mode;
+    String device;
+    String service;
+    List<String> endpoints;
+    String validUntil;
+    boolean locked;
+
+    public enum OFFER_TYPE {
+        IssueOffer,
+        VerifyOffer
+    }
+
+    public enum PRESENT_MODE {
+        Direct,
+        Indirect,
+        Proxy
+    }
+}
+```
+
+### Property
+
+| Name       | Type                  | Description                           | **M/O** | **Note** |
+|------------|-----------------------|---------------------------------------|---------|----------|
+| offerId    | String                 | Offer ID              |    M    |          |
+| type       | OFFER_TYPE  | Offer 타입            |    M    |          |
+| mode       | PRESENT_MODE | 제출모드           |    M    |          |
+| device     | String                 | 응대장치 식별자      |    O    |          |
+| service    | String                 | 서비스 식별자     |    O    |          |
+| endpoints  | List<String>           | 프로파일 요청 API endpoint 목록             |    O    |          |
+| validUntil | String                 | 유효시간        |    M    |          |
+| locked     | boolean                | Offer 잠김 여부    |    O    |          |
+
+<br>
+
+## 6. VC
+## 6.1. ReqVC
+
+### Description
+
+`VC 요청 객체`
+
+### Declaration
+
+```java
+public class ReqVC {
+    String refId;
+    Profile profile;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| refId        | String           | 참조 ID       |    M    |          |
+| profile      | Profile    | 발급 요청 프로파일      |    M    |          |
+
+<br>
+
+## 6.1.1. Profile
+
+### Description
+
+`발급 요청 프로파일`
+
+### Declaration
+
+```java
+public static class Profile {
+    String id;
+    String issuerNonce;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| id        | String | 발급처 DID                        |    M    |                          |
+| issuerNonce | String            | 발급처 nonce        |    M    |                                     |
+<br>
+
+
+## 6.2. VCPlanList
+
+### Description
+
+`VC Plan 목록`
+
+### Declaration
+
+```java
+public class VCPlanList {
+    int count;
+    List<VCPlan> items;
+}
+```
+
+### Property
+
+| Name   | Type             | Description                      | **M/O** | **Note** |
+|--------|------------------|----------------------------------|---------|----------|
+| count  | int              | VC plan의 수               |    M    |          |
+| items  | List<VCPlan>     | VC plan 목록              |    M    | [VCPlan](#621-vcplan) |
+
+<br>
+
+## 6.2.1. VCPlan
+
+### Description
+
+`VC plan 상세 객체`
+
+### Declaration
+
+```java
+public class VCPlan {
+    String vcPlanId;
+    String name;
+    String description;
+    String ref;
+    LogoImage logo;
+    String validFrom;
+    String validUntil;
+    CredentialSchema credentialSchema;
+    Option option;
+    List<String> allowedIssuers;
+    String manager;
+}
+```
+
+### Property
+
+| Name           | Type               | Description                          | **M/O** | **Note** |
+|----------------|--------------------|--------------------------------------|---------|----------|
+| vcPlanId       | String             | VC plan ID          |    M    |          |
+| name           | String             | VC plan 이름                |    M    |          |
+| description    | String             | VC plan 설명           |    M    |          |
+| ref            | String             | 참조 ID          |    M    |          |
+| logo           | LogoImage          | 로고이미지        |    O    | [LogoImage](#53-logoimage) |
+| validFrom      | String             | 유효시작일      |    M    |          |
+| validUntil     | String             | 유효만료일      |    M    |          |
+| credentialSchema| CredentialSchema  | Credential schema            |    O    |          |
+| option         | Option      | VC Plan 옵션                         |    O    |          |
+| allowedIssuers | List<String>       | VC plan 사용이 허용된 발급 사업자 DID 목록 |    M    |          |
+| manager        | String             | VC plan 관리 권한을 가진 엔티티     |    M    |          |
+
+## 6.2.1.1. Option
+
+### Description
+
+`VC plan 옵션`
+
+### Declaration
+```java
+public static class Option {
+    boolean allowUserInit;
+    boolean allowIssuerInit;
+    boolean delegatedIssuance;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| allowUserInit        | boolean | 사용자에 의한 발급 개시 허용 여부                        |    M    |                          |
+| allowIssuerInit | boolean            | 이슈어에 의한 발급 개시 허용 여부        |    M    |                                     |
+| delegatedIssuance | boolean            | 대표 발급자에 의한 위임발급 여부        |    M    |                                     |
+
+<br>
+
+
 # Enumerators
 
 ## 1. DID_KEY_TYPE
@@ -1059,7 +2058,6 @@ public enum DID_KEY_TYPE {
     secp256r1VerificationKey2018("Secp256r1VerificationKey2018");
 }
 ```
-
 <br>
 
 ## 2. DID_SERVICE_TYPE
@@ -1346,6 +2344,8 @@ public enum ELLIPTIC_CURVE_TYPE {
 }
 ```
 
+<br>
+
 ## 18. VERIFY_AUTH_TYPE
 
 ### Description
@@ -1366,6 +2366,88 @@ public enum VERIFY_AUTH_TYPE {
 ```
 
 <br>
+
+## 19. ROLE_TYPE
+
+### Description
+
+`Role 타입 종류`
+
+### Declaration
+
+```java
+public enum ROLE_TYPE {
+    TAS("Tas"),
+    WALLET("Wallet"),
+    ISSUER("Issuer"),
+    VERIFIER("Verifier"),
+    WALLET_PROVIDER("WalletProvider"),
+    APP_PROVIDER("AppProvider"),
+    LIST_PROVIDER("ListProvider"),
+    OP_PROVIDER("OpProvider"),
+    KYC_PROVIDER("KycProvider"),
+    NOTIFICATION_PROVIDER("NotificationProvider"),
+    LOG_PROVIDER("LogProvider"),
+    PORTAL_PROVIDER("PortalProvider"),
+    DELEGATION_PROVIDER("DelegationProvider"),
+    STORAGE_PROVIDER("StorageProvider"),
+    BACKUP_PROVIDER("BackupProvider"),
+    ETC("Etc");
+}
+```
+<br>
+
+## 20. SERVER_TOKEN_PURPOSE
+
+### Description
+
+`서버토큰목적`
+
+### Declaration
+
+```java
+public enum SERVER_TOKEN_PURPOSE {
+    CREATE_DID(5),
+    UPDATE_DID(6),
+    RESTORE_DID(7),
+    ISSUE_VC(8),
+    REMOVE_VC(9),
+    PRESENT_VP(10),
+    CREATE_DID_AND_ISSUE_VC(13);
+}
+```
+
+<br>
+
+## 21. WALLET_TOKEN_PURPOSE
+
+### Description
+
+`월렛토큰목적`
+
+### Declaration
+
+```java
+public enum WALLET_TOKEN_PURPOSE {
+    PERSONALIZE(1),
+    DEPERSONALIZE(2),
+    PERSONALIZE_AND_CONFIGLOCK(3),
+    CONFIGLOCK(4),
+    CREATE_DID(5),
+    UPDATE_DID(6),
+    RESTORE_DID(7),
+    ISSUE_VC(8),
+    REMOVE_VC(9),
+    PRESENT_VP(10),
+    LIST_VC(11),
+    DETAIL_VC(12),
+    CREATE_DID_AND_ISSUE_VC(13),
+    LIST_VC_AND_PRESENT_VP(14);
+}
+```
+
+
+
 
 # APIs
 
@@ -1478,3 +2560,10 @@ public static AlgorithmType.ALGORITHM_TYPE convertTo(DID_KEY_TYPE type){
     }
 }
 ```
+
+<br>
+
+
+
+
+

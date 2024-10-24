@@ -1,5 +1,17 @@
-/* 
- * Copyright 2024 Raonsecure
+/*
+ * Copyright 2024 OmniOne.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.omnione.did.sdk.datamodel.profile;
@@ -107,6 +119,7 @@ public class VerifyProfile implements ProofContainer {
             public List<String> displayClaims;
             public List<String> requiredClaims;
             public List<String> allowedIssuers;
+            public boolean presentAll;
 
             public String getId() {
                 return id;
@@ -154,6 +167,14 @@ public class VerifyProfile implements ProofContainer {
 
             public void setAllowedIssuers(List<String> allowedIssuers) {
                 this.allowedIssuers = allowedIssuers;
+            }
+
+            public boolean isPresentAll() {
+                return presentAll;
+            }
+
+            public void setPresentAll(boolean presentAll) {
+                this.presentAll = presentAll;
             }
         }
 

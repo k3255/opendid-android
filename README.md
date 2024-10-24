@@ -10,6 +10,7 @@ did-client-sdk-aos
 ├── CLA.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
+├── LICENSE
 ├── LICENSE-dependencies.md
 ├── MAINTAINERS.md
 ├── README.md
@@ -18,6 +19,10 @@ did-client-sdk-aos
 ├── SECURITY.md
 ├── docs
 │   └── api
+│       ├── did-communication-sdk-aos
+│       │   ├── Communication.md
+│       │   ├── CommunicationError.md
+│       │   └── Communication_ko.md
 │       ├── did-core-sdk-aos
 │       │   ├── DIDManager.md
 │       │   ├── DIDManager_ko.md
@@ -31,13 +36,25 @@ did-client-sdk-aos
 │       ├── did-datamodel-sdk-aos
 │       │   ├── DataModel.md
 │       │   └── DataModel_ko.md
-│       └── did-utility-sdk-aos
-│           ├── Utility.md
-│           ├── UtilityError.md
-│           └── Utility_ko.md
+│       ├── did-utility-sdk-aos
+│       │   ├── Utility.md
+│       │   ├── UtilityError.md
+│       │   └── Utility_ko.md
+│       └── did-wallet-sdk-aos
+│           ├── WalletAPI.md
+│           ├── WalletAPI_ko.md
+│           └── WalletError.md
 └── source
     └── did-client-sdk-aos
         ├── build.gradle
+        ├── did-communication-sdk-aos
+        │   ├── CHANGELOG.md
+        │   ├── LICENSE-dependencies.md
+        │   ├── README.md
+        │   ├── README_ko.md
+        │   ├── SECURITY.md
+        │   ├── build.gradle
+        │   └── src
         ├── did-core-sdk-aos
         │   ├── CHANGELOG.md
         │   ├── LICENSE-dependencies.md
@@ -62,11 +79,20 @@ did-client-sdk-aos
         │   ├── SECURITY.md
         │   ├── build.gradle
         │   └── src
-        ├── local.properties
+        ├── did-wallet-sdk-aos
+        │   ├── CHANGELOG.md
+        │   ├── LICENSE-dependencies.md
+        │   ├── README.md
+        │   ├── README_ko.md
+        │   ├── SECURITY.md
+        │   ├── build.gradle
+        │   └── src
         ├── release
+        │   ├── did-communication-sdk-aos-1.0.0.jar
         │   ├── did-core-sdk-aos-1.0.0.jar
         │   ├── did-datamodel-sdk-aos-1.0.0.jar
-        │   └── did-utility-sdk-aos-1.0.0.jar
+        │   ├── did-utility-sdk-aos-1.0.0.jar
+        │   └── did-wallet-sdk-aos-1.0.0.jar
         └── settings.gradle
 ```
 
@@ -82,6 +108,7 @@ did-client-sdk-aos
 | CHANGELOG.md            | Version-specific changes in the project         |
 | CODE_OF_CONDUCT.md      | Code of conduct for contributors                |
 | CONTRIBUTING.md         | Contribution guidelines and procedures          |
+| LICENSE                 | Apache 2.0                                      |
 | LICENSE-dependencies.md | Licenses for the project’s dependency libraries |
 | MAINTAINERS.md          | General guidelines for maintaining              |
 | RELEASE-PROCESS.md      | Release process                                 |
@@ -138,6 +165,36 @@ Libraries can be found in the [releases folder](source/did-client-sdk-aos/releas
 ```
 3. Sync `Gradle` to ensure the dependencies are properly added.
 
+
+### Wallet SDK
+
+1. Copy the `did-core-sdk-aos-1.0.0.jar`, `did-utility-sdk-aos-1.0.0.jar`, `did-datamodel-sdk-aos-1.0.0.jar`, `did-wallet-sdk-aos-1.0.0.jar`, `did-communication-sdk-aos-1.0.0.jar` file to the libs of the app project.
+2. Add the following dependencies to the build.gradle of the app project.
+
+```groovy
+    implementation files('libs/did-wallet-sdk-aos-1.0.0.jar')
+    implementation files('libs/did-core-sdk-aos-1.0.0.jar')
+    implementation files('libs/did-utility-sdk-aos-1.0.0.jar')
+    implementation files('libs/did-datamodel-sdk-aos-1.0.0.jar')
+    implementation files('libs/did-communication-sdk-aos-1.0.0.jar')
+    api "androidx.room:room-runtime:2.6.1"
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
+    implementation 'androidx.biometric:biometric:1.1.0'
+```
+3. Sync `Gradle` to ensure the dependencies are properly added.
+
+
+### Communication SDK
+
+1. Copy the `did-communication-sdk-aos-1.0.0.jar` file to the libs of the app project.
+2. Add the following dependencies to the build.gradle of the app project.
+
+```groovy
+    implementation files('libs/did-communication-sdk-aos-1.0.0.jar')
+```
+3. Sync `Gradle` to ensure the dependencies are properly added.
+
+
 ## API Reference
 
 API Reference can be found : 
@@ -145,6 +202,8 @@ API Reference can be found :
 - [Core SDK](source/did-client-sdk-aos/did-core-sdk-aos/README.md)  
 - [Utility SDK](source/did-client-sdk-aos/did-utility-sdk-aos/README.md)  
 - [DataModel SDK](source/did-client-sdk-aos/did-datamodel-sdk-aos/README.md)  
+- [Wallet SDK](source/did-client-sdk-aos/did-wallet-sdk-aos/README.md)  
+- [Communication SDK](source/did-client-sdk-aos/did-communication-sdk-aos/README.md)  
 
 ## Change Log
 
@@ -153,6 +212,8 @@ ChangeLog can be found :
 - [Core SDK](source/did-client-sdk-aos/did-core-sdk-aos/CHANGELOG.md)  
 - [Utility SDK](source/did-client-sdk-aos/did-utility-sdk-aos/CHANGELOG.md)  
 - [DataModel SDK](source/did-client-sdk-aos/did-datamodel-sdk-aos/CHANGELOG.md)  
+- [Wallet SDK](source/did-client-sdk-aos/did-wallet-sdk-aos/CHANGELOG.md)  
+- [Communication SDK](source/did-client-sdk-aos/did-communication-sdk-aos/CHANGELOG.md)  
 
 ## Contributing
 
@@ -160,4 +221,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_
 
 
 ## License
-Copyright 2024 Raonsecure
+[Apache 2.0](LICENSE)

@@ -1,5 +1,17 @@
-/* 
- * Copyright 2024 Raonsecure
+/*
+ * Copyright 2024 OmniOne.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.omnione.did.sdk.core.bioprompthelper;
@@ -14,6 +26,9 @@ import java.util.concurrent.Executor;
 
 public class BioPromptHelper {
     private Context context;
+    private final int ERROR_FAILED = 7;
+    private final int ERROR_CANCELED_KEY = 10;
+    private final int ERROR_CANCELED_BUTTON = 13;
     public BioPromptHelper(){}
     public BioPromptHelper(Context context){
         this.context = context;
@@ -24,6 +39,8 @@ public class BioPromptHelper {
     public interface BioPromptInterface {
         void onSuccess(String result);
         void onFail(String result);
+        void onError(String result);
+        void onCancel(String result);
     }
     private BioPromptInterface bioPromptInterface;
 
@@ -38,7 +55,12 @@ public class BioPromptHelper {
                 @Override
                 public void onAuthenticationError(int errorCode, CharSequence errString) {
                     super.onAuthenticationError(errorCode, errString);
-                    bioPromptInterface.onFail("onAuthenticationError");
+                    if(errorCode == ERROR_FAILED)
+                        bioPromptInterface.onError("onAuthenticationError");
+                    else if(errorCode == ERROR_CANCELED_BUTTON || errorCode == ERROR_CANCELED_KEY)
+                        bioPromptInterface.onCancel("onAuthenticationCancel");
+                    else
+                        bioPromptInterface.onError("UnknownError");
                 }
 
                 @Override
@@ -76,13 +98,17 @@ public class BioPromptHelper {
                 @Override
                 public void onAuthenticationError(int errorCode, CharSequence errString) {
                     super.onAuthenticationError(errorCode, errString);
-                    bioPromptInterface.onFail("onAuthenticationError");
+                    if(errorCode == ERROR_FAILED)
+                        bioPromptInterface.onError("onAuthenticationError");
+                    else if(errorCode == ERROR_CANCELED_BUTTON || errorCode == ERROR_CANCELED_KEY)
+                        bioPromptInterface.onCancel("onAuthenticationCancel");
+                    else
+                        bioPromptInterface.onError("UnknownError");
                 }
 
                 @Override
                 public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
-                    // 지문인증후 bio 서명키 생성
                     bioPromptInterface.onSuccess("onAuthenticationSucceeded");
                 }
 
@@ -90,7 +116,6 @@ public class BioPromptHelper {
                 public void onAuthenticationFailed() {
                     super.onAuthenticationFailed();
                     bioPromptInterface.onFail("onAuthenticationFailed");
-                    // 인증 실패 처리
                 }
             });
 
