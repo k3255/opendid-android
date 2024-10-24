@@ -15,7 +15,7 @@ puppeteer:
         fullPage: false
 ---
 
-Android DataModel SDK API
+Android DataModel SDK
 ==
 
 - Topic: DataModel
@@ -26,29 +26,29 @@ Android DataModel SDK API
 | Version | Date       | Changes                    |
 | ------- | ---------- | -------------------------- |
 | v1.0.0  | 2024-07-11 | Initial version            |
-
+| v1.0.1  | 2024-09-03 | Add Service Vo            |
 
 
 <div style="page-break-after: always;"></div>
 
 
 # Contents
-- [Models](#models)
+- [CoreVo](#corevo)
     - [1. DIDDocument](#1-diddocument)
         - [1.1. VerificationMethod](#11-verificationmethod)
-        - [1.2 Service](#12-service)
+        - [1.2. Service](#12-service)
     - [2. VerifiableCredential](#2-verifiablecredential)
-        - [2.1 Issuer](#21-issuer)
-        - [2.2 Evidence](#22-evidence)
-        - [2.3 CredentialSchema](#23-credentialschema)
-        - [2.4 CredentialSubject](#24-credentialsubject)
-        - [2.5 Claim](#25-claim)
-        - [2.6 Internationalization](#26-internationalization)
+        - [2.1. Issuer](#21-issuer)
+        - [2.2. Evidence](#22-evidence)
+        - [2.3. CredentialSchema](#23-credentialschema)
+        - [2.4. CredentialSubject](#24-credentialsubject)
+        - [2.5. Claim](#25-claim)
+        - [2.6. Internationalization](#26-internationalization)
     - [3. VerifiablePresentation](#3-verifiablepresentation)
     - [4. Proof](#4-proof)
         - [4.1 VCProof](#41-vcproof)
     - [5. Profile](#5-profile)
-        - [5.1. IssuerProfile](#51-issuerprofile)
+        - [5.1. IssueProfile](#51-issueprofile)
             - [5.1.1. Profile](#511-profile)
                 - [5.1.1.1. CredentialSchema](#5111-credentialschema)
                 - [5.1.1.2. Process](#5112-process)
@@ -66,6 +66,46 @@ Android DataModel SDK API
             - [6.2.1. Claim](#621-claim)
                 - [6.2.1.1. Namespace](#6211-namespace)
                 - [6.2.1.2. ClaimDef](#6212-claimdef)
+- [SeviceVo](#servicevo)
+    - [1. Protocol](#1-protocol)
+        - [1.1. BaseRequest](#11-baserequest)
+            - [1.1.1. P131RequestVo](#111-p131requestvo)
+            - [1.1.2. P132RequestVo](#112-p132requestvo)
+            - [1.1.3. P210RequestVo](#113-p210requestvo)
+            - [1.1.4. P310RequestVo](#114-p310requestvo)
+        - [1.2. BaseResponse](#12-baseresponse)
+            - [1.2.1. P131ResponseVo](#121-p131responsevo)
+            - [1.2.2. P132ResponseVo](#122-p132responsevo)
+            - [1.2.3. P210ResponseVo](#123-p210responsevo)
+            - [1.2.4. P310ResponseVo](#124-p310responsevo)
+    - [2. Token](#2-token)
+        - [2.1. ServerTokenSeed](#21-servertokenseed)
+            - [2.1.1. AttestedAppInfo](#211-attestedappinfo)
+                - [2.1.1.1. provider](#2111-provider)
+            - [2.1.2. SignedWalletInfo](#212-signedwalletinfo)
+                - [2.1.2.1. Wallet](#2121-wallet)
+        - [2.2. ServerTokenData](#22-servertokendata)
+        - [2.3. WalletTokenSeed](#23-wallettokenseed)
+        - [2.4. WalletTokenData](#24-wallettokendata)
+    - [3. SecurityChannel](#3-securitychannel)
+        - [3.1. ReqEcdh](#31-reqecdh)
+        - [3.2. AccEcdh](#32-accecdh)
+        - [3.3. AccE2e](#33-acce2e)
+        - [3.4. E2e](#34-e2e)
+        - [3.5. DIDAuth](#35-didauth)
+    - [4. DIDDoc](#4-diddoc)
+        - [4.1. DidDocVo](#41-diddocvo)
+        - [4.2. AttestedDidDoc](#42-attesteddiddoc)
+        - [4.3. SignedDidDoc](#43-signeddiddoc)
+    - [5. Offer](#5-offer)
+        - [5.1. IssueOfferPayload](#51-issueofferpayload)
+        - [5.2. VerifyOfferPayload](#52-verifyofferpayload)
+    - [6. Issue VC](#6-issue-vc)
+        - [6.1. ReqVC](#61-reqvc)
+            - [6.1.1. Profile](#611-profile)
+        - [6.2. VCPlanList](#62-vcplanlist)
+            - [6.2.1. VCPlan](#621-vcplan)
+                - [6.2.1.1. Option](#6211-option)
 - [Enumerators](#enumerators)
     - [1. DID_KEY_TYPE](#1-did_key_type)
     - [2. DID_SERVICE_TYPE](#2-did_service_type)
@@ -85,17 +125,23 @@ Android DataModel SDK API
     - [16. CREDENTIAL_SCHEMA_TYPE](#16-credential_schema_type)
     - [17. ELLIPTIC_CURVE_TYPE](#17-elliptic_curve_type)
     - [18. VERIFY_AUTH_TYPE](#18-verify_auth_type)
+    - [19. ROLE_TYPE](#19-role_type)
+    - [20. SERVER_TOKEN_PURPOSE](#20-server_token_purpose)
+    - [21. WALLET_TOKEN_PURPOSE](#21-wallet_token_purpose)
 - [Apis](#apis)
     - [1. deserialize](#1-deserialize)
     - [2. convertFrom](#2-convertfrom)
     - [3. convertTo](#3-convertto)
-# Models
+
+<br>
+
+# CoreVo
 
 ## 1. DIDDocument
 
 ### Description
 
-`Document for Decentralized Identifiers`
+`Document for Decentralized IDs`
 
 ### Declaration
 
@@ -522,7 +568,7 @@ public class VCProof extends Proof {
 
 ## 5. Profile
 
-## 5.1 IssuerProfile
+## 5.1 IssueProfile
 
 ### Description
 
@@ -531,7 +577,7 @@ public class VCProof extends Proof {
 ### Declaration
 
 ```java
-public class IssuerProfile {
+public class IssueProfile {
     String id;
     ProfileType.PROFILE_TYPE type;
     String title;
@@ -1040,6 +1086,961 @@ public class ClaimDef {
 
 <br>
 
+# ServiceVo
+
+## 1. Protocol
+
+## 1.1. BaseRequest
+
+### Description
+
+`Each request protocol object inherits from this abstract class, which serves as the base class for protocol messages`
+
+### Declaration
+
+```java
+public abstract class BaseRequestVo {
+    String id;
+    String txId;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| id            | String | Message ID         |    M    | 
+| txId  | String | Transaction ID         |    O    | 
+
+<br>
+
+
+## 1.1.1. P131RequestVo
+
+### Description
+
+`Request object for register wallet protocol`
+
+### Declaration
+
+```java
+public class P131RequestVo extends BaseRequestVo {
+    AttestedDidDoc attestedDidDoc;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| attestedDidDoc  | AttestedDidDoc | Provider Attested DID document          |    M    | [AttestedDidDoc](#42-attesteddiddoc) |
+
+<br>
+
+## 1.1.2. P132RequestVo
+
+### Description
+
+`Request object for register user protocol`
+
+### Declaration
+
+```java
+public class P132RequestVo extends BaseRequestVo {
+    AttestedDidDoc attestedDIDDoc;
+    ReqEcdh reqEcdh;
+    ServerTokenSeed seed;
+    SignedDidDoc signedDidDoc;
+    String serverToken;
+    String iv;
+    String kycTxId;
+}
+```
+
+### Property
+
+| Name            | Type              | Description                   | **M/O** | **Note** |
+|-----------------|-------------------|--------------------------------|---------|----------|
+| attestedDIDDoc  | AttestedDidDoc     | Provider Attested DID document          |    M    | [AttestedDidDoc](#42-attesteddiddoc) |
+| reqEcdh         | ReqEcdh            | Request Data for ECDH               |    M    | [ReqEcdh](#31-reqecdh) |
+| seed            | ServerTokenSeed    | Server token seed              |    M    | [ServerTokenSeed](#21-servertokenseed) |
+| signedDidDoc    | SignedDidDoc       | Signed DID document            |    M    | [SignedDidDoc](#43-signeddiddoc) |
+| serverToken     | String             | Server token                   |    M    |          |
+| iv              | String             | Initialize vector          |    M    |          |
+| kycTxId         | String             | KYC transaction ID             |    M    |          |
+
+<br>
+
+## 1.1.3. P210RequestVo
+
+### Description
+
+`Request object for issue VC protocol`
+
+### Declaration
+
+```java
+public class P210RequestVo extends BaseRequestVo {
+    String vcPlanId;
+    String issuer;
+    String offerId;
+    ReqEcdh reqEcdh;
+    ServerTokenSeed seed;
+    String serverToken;
+    DIDAuth didAuth;
+    AccE2e accE2e;
+    String encReqVc;
+    String vcId;
+}
+```
+
+### Property
+
+| Name         | Type             | Description                   | **M/O** | **Note** |
+|--------------|------------------|--------------------------------|---------|----------|
+| vcPlanId     | String            | Verifiable Credential Plan ID  |    M    |          |
+| issuer       | String            | Issuer DID       |    M    |          |
+| offerId      | String            | Offer ID |    M    |          |
+| reqEcdh      | ReqEcdh           | ECDH request data               |    M    | [ReqEcdh](#31-reqecdh) |
+| seed         | ServerTokenSeed   | Server token seed              |    M    | [ServerTokenSeed](#21-servertokenseed) |
+| serverToken  | String            | Server token                   |    M    |          |
+| didAuth      | DIDAuth           | DID Auth data             |    M    | [DIDAuth](#35-didauth) |
+| accE2e       | AccE2e            | E2E encryption data     |    M    | [AccE2e](#33-acce2e) |
+| encReqVc     | String            | Encrypted Verifiable Credential request data |    M    |          |
+| vcId         | String            | Verifiable Credential ID       |    M    |          |
+
+<br>
+
+## 1.1.4. P310RequestVo
+
+### Description
+
+`Request object for submit VP protocol`
+
+### Declaration
+
+```java
+public class P310RequestVo extends BaseRequestVo {
+    String offerId;
+    ReqEcdh reqEcdh;
+    AccE2e accE2e;
+    String encVp;
+}
+```
+
+### Property
+
+| Name     | Type             | Description                      | **M/O** | **Note** |
+|----------|------------------|----------------------------------|---------|----------|
+| offerId  | String            | Offer ID  |    M    |          |
+| reqEcdh  | ReqEcdh           | ECDH request data                 |    M    | [ReqEcdh](#31-reqecdh) |
+| accE2e   | AccE2e            | E2E acceptance data       |    M    | [AccE2e](#33-acce2e) |
+| encVp    | String            | Encrypted Verifiable Presentation |    M    |          |
+
+<br>
+
+## 1.2. BaseResponse
+
+### Description
+
+`Each response protocol object inherits from this abstract class, which serves as the base class for protocol messages`
+
+### Declaration
+
+```java
+public abstract class BaseResponseVo {
+    String txId;
+    Integer code;
+    String message;
+}
+```
+
+### Property
+
+| Name            | Type           | Description                   | **M/O** | **Note** |
+|-----------------|----------------|--------------------------------|---------|----------|
+| txId            | String | Transaction ID         |    M    | 
+| code  | Integer | Error code         |    M    | 
+| message  | String | Error message         |    M    | 
+
+<br>
+
+## 1.2.1. P131ResponseVo
+
+### Description
+
+`Response object for register wallet protocol`
+
+### Declaration
+
+```java
+public class P131ResponseVo extends BaseResponseVo {}
+```
+
+### Property
+N/A
+
+<br>
+
+
+## 1.2.2. P132ResponseVo
+
+### Description
+
+`Response object for register user protocol`
+
+### Declaration
+
+```java
+public class P132ResponseVo extends BaseResponseVo {
+    String iv;
+    String encStd;
+    AccEcdh accEcdh;
+}
+```
+
+### Property
+
+| Name     | Type     | Description                   | **M/O** | **Note** |
+|----------|----------|-------------------------------|---------|----------|
+| iv       | String   | Initialize vector         |    M    |          |
+| encStd   | String   | Encrypted server token data       |    M    |          |
+| accEcdh  | AccEcdh  | ECDH acceptance data            |    M    | [AccEcdh](#32-accecdh) |
+
+<br>
+
+## 1.2.3. P210ResponseVo
+
+### Description
+
+`Response object for issue VC protocol`
+
+### Declaration
+
+```java
+public class P210ResponseVo extends BaseResponseVo {
+    String refId;
+    AccEcdh accEcdh;
+    String iv;
+    String encStd;
+    String authNonce;
+    IssueProfile profile;
+    E2e e2e;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                      | **M/O** | **Note** |
+|------------|----------------|----------------------------------|---------|----------|
+| refId      | String          | Reference ID                     |    M    |          |
+| accEcdh    | AccEcdh         | ECDH acceptance data            |    M    | [AccEcdh](#32-accecdh) |
+| iv         | String          | Initialize vector            |    M    |          |
+| encStd     | String          | Encrypted server token data        |    M    |          |
+| authNonce  | String          | Auth nonce             |    M    |          |
+| profile    | IssueProfile    | Issue profile                   |    M    |[IssueProfile](#51-issueprofile)            |
+| e2e        | E2e             | E2E encryption data       |    M    | [E2e](#34-e2e) |
+
+<br>
+
+## 1.2.4. P310ResponseVo
+
+### Description
+
+`Response object for submit VP protocol`
+
+### Declaration
+
+```java
+public class P310ResponseVo extends BaseResponseVo {
+    VerifyProfile profile;
+}
+```
+
+### Property
+
+| Name    | Type           | Description                      | **M/O** | **Note** |
+|---------|----------------|----------------------------------|---------|----------|
+| profile | VerifyProfile   | Verify profile             |    M    | [VerifyProfile](#52-verifyprofile)          |
+
+<br>
+
+## 2. Token
+## 2.1. ServerTokenSeed
+
+### Description
+
+`Server token seed`
+
+### Declaration
+
+```java
+public class ServerTokenSeed {
+    SERVER_TOKEN_PURPOSE purpose;
+    SignedWalletInfo walletInfo;
+    AttestedAppInfo caAppInfo;
+}
+```
+
+### Property
+
+| Name        | Type                                          | Description                   | **M/O** | **Note** |
+|-------------|-----------------------------------------------|-------------------------------|---------|----------|
+| purpose     | SERVER_TOKEN_PURPOSE       | server token purpose  |    M    | [ServerTokenPurpose](#20-server_token_purpose) |
+| walletInfo  | SignedWalletInfo                              | Signed wallet information     |    M    | [SignedWalletInfo](#212-signedwalletinfo) |
+| caAppInfo   | AttestedAppInfo                               | Attested app information      |    M    | [AttestedAppInfo](#211-attestedappinfo) |
+
+<br>
+
+## 2.1.1. AttestedAppInfo
+
+### Description
+
+`Attested app information`
+
+
+### Declaration
+
+```java
+public class AttestedAppInfo {
+    String appId;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name     | Type     | Description                   | **M/O** | **Note**                  |
+|----------|----------|-------------------------------|---------|---------------------------|
+| appId    | String   | Certificated app id       |    M    |                            |
+| provider | Provider | Provider information          |    M    | [Provider](#2111-provider)      |
+| nonce    | String   | Nonce for attestation|    M    |                            |
+| proof    | Proof    | Assertion proof               |    O    | [Proof](#4-proof)         
+
+<br>
+
+## 2.1.1.1. Provider
+
+### Description
+
+`Provider information`
+
+### Declaration
+
+```java
+public class Provider {
+    String did;
+    String certVcRef;
+}
+```
+
+### Property
+
+| Name       | Type   | Description             | **M/O** | **Note** |
+|------------|--------|-------------------------|---------|----------|
+| did        | String | Provider DID    |    M    |          |
+| certVcRef  | String | Certificate VC URL |    M    |          |
+
+<br>
+
+## 2.1.2. SignedWalletInfo
+
+### Description
+
+`Signed wallet information`
+
+### Declaration
+
+```java
+public class SignedWalletInfo {
+    Wallet wallet;
+    String nonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| wallet     | Wallet          | Wallet information         |    M    | [Wallet](#2121-wallet) |
+| nonce      | String          | Nonce                |    M    |          |
+| proof      | Proof           | Proof               |    O    | [Proof](#4-proof) |
+| proofs     | List<Proof>     | List of proofs             |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 2.1.2.1. Wallet
+
+### Description
+
+`Wallet details`
+
+### Declaration
+
+```java
+public class Wallet {
+    String id;
+    String did;
+}
+```
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| id         | String          | Wallet ID  |    M    |          |
+| did        | String          | Wallet provider DID |    M    |          |
+
+<br>
+
+## 2.2. ServerTokenData
+
+### Description
+
+`Server token data`
+
+### Declaration
+
+```java
+public class ServerTokenData {
+    SERVER_TOKEN_PURPOSE purpose;
+    String walletId;
+    String appId;
+    String validUntil;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type                                         | Description                   | **M/O** | **Note** |
+|------------|----------------------------------------------|-------------------------------|---------|----------|
+| purpose    | SERVER_TOKEN_PURPOSE      | Server token purpose   |    M    | [ServerTokenPurpose](#20-server_token_purpose) |
+| walletId   | String                                       | Wallet ID |    M    |          |
+| appId      | String                                       | Certificate app ID    |    M    |          |
+| validUntil | String                                       | Expiration date of the server token  |    M    |          |
+| provider   | Provider                                     | Provider information          |    M    | [Provider](#2111-provider) |
+| nonce      | String                                       | Nonce                   |    M    |          |
+| proof      | Proof                                        | Proof                  |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 2.3. WalletTokenSeed
+
+### Description
+
+`Wallet token seed`
+
+### Declaration
+
+```java
+public class WalletTokenSeed {
+    WalletTokenPurpose.WALLET_TOKEN_PURPOSE purpose;
+    String pkgName;
+    String nonce;
+    String validUntil;
+    String userId;
+}
+```
+
+### Property
+
+| Name       | Type                                        | Description                       | **M/O** | **Note** |
+|------------|---------------------------------------------|-----------------------------------|---------|----------|
+| purpose    | WALLET_TOKEN_PURPOSE     | Wallet token purpose     |    M    | [WalletTokenPurpose](#21-wallet_token_purpose) |
+| pkgName    | String                                      | CA package name |    M    |      |
+| nonce      | String                                      | Nonce                        |    M    |          |
+| validUntil | String                                      | Expiration date of the token      |    M    |          |
+| userId     | String                                      | User ID |    M    |          |
+
+<br>
+
+
+## 2.4. WalletTokenData
+
+### Description
+
+`Wallet token data`
+
+### Declaration
+
+```java
+public class WalletTokenData {
+    WalletTokenSeed seed;
+    String sha256_pii;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type             | Description                   | **M/O** | **Note** |
+|------------|------------------|-------------------------------|---------|----------|
+| seed       | WalletTokenSeed   | Wallet token seed     |    M    | [WalletTokenSeed](#23-wallettokenseed) |
+| sha256_pii | String            | SHA-256 hash of PII           |    M    |          |
+| provider   | Provider          | Provider information          |    M    | [Provider](#2111-provider) |
+| nonce      | String            | Nonce                    |    M    |          |
+| proof      | Proof             | Proof                  |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3. SecurityChannel
+
+## 3.1. ReqEcdh
+
+### Description
+
+`ECDH request data`
+
+### Declaration
+
+```java
+public class ReqEcdh implements ProofContainer {
+    String client;
+    String clientNonce;
+    EllipticCurveType.ELLIPTIC_CURVE_TYPE curve;
+    String publicKey;
+    Ciphers candidate;
+    Proof proof;
+    List<Proof> proofs;
+
+    public static class Ciphers {
+        List<SymmetricCipherType.SYMMETRIC_CIPHER_TYPE> ciphers;
+    }
+}
+```
+
+### Property
+
+| Name        | Type                             | Description                               | **M/O** | **Note** |
+|-------------|----------------------------------|-------------------------------------------|---------|----------|
+| client      | String                           | Client DID                         |    M    |          |
+| clientNonce | String                           | Client Nonce              |    M    |          |
+| curve       | ELLIPTIC_CURVE_TYPE | Curve type for ECDH                       |    M    |          |
+| publicKey   | String                           | Public key for ECDH                       |    M    |          |
+| candidate   | ReqEcdh.Ciphers                  | Candidate ciphers                         |    O    |          |
+| proof       | Proof                            | Proof                   |    M    | [Proof](#4-proof) |
+| proofs      | List<Proof>                      | List of proofs                            |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3.2. AccEcdh
+
+### Description
+
+`ECDH acceptance data`
+
+### Declaration
+
+```java
+public class AccEcdh {
+    String server;
+    String serverNonce;
+    String publicKey;
+    SymmetricCipherType.SYMMETRIC_CIPHER_TYPE cipher;
+    SymmetricPaddingType.SYMMETRIC_PADDING_TYPE padding;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name        | Type                                       | Description                        | **M/O** | **Note** |
+|-------------|--------------------------------------------|------------------------------------|---------|----------|
+| server      | String                                     | Server ID                  |    M    |          |
+| serverNonce | String                                     | Server Nonce                       |    M    |          |
+| publicKey   | String                                     | Public Key for key agreement       |    M    |          |
+| cipher      | SymmetricCipherType.SYMMETRIC_CIPHER_TYPE  | Cipher type for encryption         |    M    |          |
+| padding     | SymmetricPaddingType.SYMMETRIC_PADDING_TYPE| Padding type for encryption        |    M    |          |
+| proof       | Proof                                      | Key agreement proof                |    O    | [Proof](#4-proof) |
+
+<br>
+
+## 3.3. AccE2e
+
+### Description
+
+`E2E acceptance data`
+
+### Declaration
+
+```java
+public class AccE2e {
+    String publicKey;
+    String iv;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type               | Description                | **M/O** | **Note**               |
+|------------|--------------------|----------------------------|---------|------------------------|
+| publicKey  | String              | Public Key for encryption  |    M    | |
+| iv         | String              | Initialize Vector      |    M    | |
+| proof      | Proof               | Key agreement proof        |    O    | [Proof](#4-proof)       |
+| proofs     | List<Proof>         | List of proofs             |    O    | [Proof](#4-proof)       |
+
+<br>
+
+## 3.4. E2e
+
+### Description
+
+`E2E encryption information`
+
+### Declaration
+
+```java
+public class E2e {
+    String iv;
+    String encVc;
+}
+```
+
+### Property
+
+| Name  | Type   | Description                      | **M/O** | **Note** |
+|-------|--------|----------------------------------|---------|----------|
+| iv    | String | Initialize vector       |    M    |          |
+| encVc | String | Encrypted Verifiable Credential  |    M    |          |
+
+<br>
+
+## 3.5. DIDAuth
+
+### Description
+
+`DID Authentication data`
+
+### Declaration
+
+```java
+public class DIDAuth {
+    String did;
+    String authNonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type       | Description                        | **M/O** | **Note**                  |
+|------------|------------|------------------------------------|---------|---------------------------|
+| did        | String     | DID     |    M    |                            |
+| authNonce  | String     | Auth nonce      |    M    |                            |
+| proof      | Proof      | Authentication proof               |    M    | [Proof](#4-proof)          |
+| proofs     | List<Proof>| List of authentication proofs      |    M    | [Proof](#4-proof)          |
+
+<br>
+
+## 4. DidDoc
+## 4.1. DidDocVo
+
+### Description
+
+`Encoded DID document`
+
+### Declaration
+
+```java
+public class DidDocVo {
+    String didDoc;
+}
+```
+
+### Property
+
+| Name   | Type   | Description            | **M/O** | **Note** |
+|--------|--------|------------------------|---------|----------|
+| didDoc | String | Encoded DID document |    M    |          |
+
+<br>
+
+## 4.2. AttestedDidDoc
+
+### Description
+
+`Attested DID information`
+
+### Declaration
+
+```java
+public class AttestedDidDoc {
+    String walletId;
+    String ownerDidDoc;
+    Provider provider;
+    String nonce;
+    Proof proof;
+}
+```
+
+### Property
+
+| Name       | Type     | Description                     | **M/O** | **Note**                  |
+|------------|----------|---------------------------------|---------|---------------------------|
+| walletId   | String   | Wallet ID               |    M    |                            |
+| ownerDidDoc| String   | Owner's DID document            |    M    |                            |
+| provider   | Provider | Provider information            |    M    | [Provider](#2111-provider)      |
+| nonce      | String   | Nonce |    M    |                            |
+| proof      | Proof    | Attestation proof               |    M    | [Proof](#4-proof)          |
+
+<br>
+
+## 4.3. SignedDidDoc
+
+### Description
+
+`Signed DID Document`
+
+### Declaration
+
+```java
+public class SignedDidDoc {
+    String ownerDidDoc;
+    Wallet wallet;
+    String nonce;
+    Proof proof;
+    List<Proof> proofs;
+}
+```
+
+### Property
+
+| Name       | Type           | Description                | **M/O** | **Note** |
+|------------|----------------|----------------------------|---------|----------|
+| ownerDidDoc| String          | Owner's DID document       |    M    |          |
+| wallet     | Wallet          | Wallet information         |    M    | [Wallet](#2121-wallet) |
+| nonce      | String          | Nonce                |    M    |          |
+| proof      | Proof           | Proof               |    M    | [Proof](#4-proof) |
+| proofs     | List<Proof>     | List of proofs             |    M    | [Proof](#4-proof) |
+
+<br>
+
+## 5. Offer
+## 5.1. IssueOfferPayload
+
+### Description
+
+`Payload for issuing an offer`
+
+### Declaration
+
+```java
+public class IssueOfferPayload {
+    String offerId;
+    String vcPlanId;
+    String issuer;
+    String validUntil;
+}
+```
+
+### Property
+
+| Name      | Type   | Description                   | **M/O** | **Note** |
+|-----------|--------|-------------------------------|---------|----------|
+| offerId   | String | Offer ID |    M    |          |
+| vcPlanId  | String | VC Plan ID  |    M    |          |
+| issuer    | String | Issuer DID      |    M    |          |
+| validUntil| String | Expiration date          |    M    |          |
+
+<br>
+
+## 5.2. VerifyOfferPayload
+
+### Description
+
+`Payload for verifying an offer`
+
+### Declaration
+
+```java
+public class VerifyOfferPayload {
+    String offerId;
+    OFFER_TYPE type;
+    PRESENT_MODE mode;
+    String device;
+    String service;
+    List<String> endpoints;
+    String validUntil;
+    boolean locked;
+
+    public enum OFFER_TYPE {
+        IssueOffer,
+        VerifyOffer
+    }
+
+    public enum PRESENT_MODE {
+        Direct,
+        Indirect,
+        Proxy
+    }
+}
+```
+
+### Property
+
+| Name       | Type                  | Description                           | **M/O** | **Note** |
+|------------|-----------------------|---------------------------------------|---------|----------|
+| offerId    | String                 | Offer ID              |    M    |          |
+| type       | OFFER_TYPE  | Offer type            |    M    |          |
+| mode       | PRESENT_MODE | Presentation mode           |    M    |          |
+| device     | String                 | Device identifier      |    O    |          |
+| service    | String                 | Service identifier     |    O    |          |
+| endpoints  | List<String>           | List of profile request API endpoints             |    O    |          |
+| validUntil | String                 | End date of the offer        |    M    |          |
+| locked     | boolean                | Offer locked status    |    O    |          |
+
+<br>
+
+## 6. VC
+## 6.1. ReqVC
+
+### Description
+
+`Request object for VC`
+
+### Declaration
+
+```java
+public class ReqVC {
+    String refId;
+    Profile profile;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| refId        | String           | Reference ID       |    M    |          |
+| profile      | Profile    | Request issue profile      |    M    |          |
+
+<br>
+
+## 6.1.1. Profile
+
+### Description
+
+`Request issue profile`
+
+### Declaration
+
+```java
+public static class Profile {
+    String id;
+    String issuerNonce;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| id        | String | Issuer DID                        |    M    |                          |
+| issuerNonce | String            | Issuer nonce        |    M    |                                     |
+<br>
+
+
+## 6.2. VCPlanList
+
+### Description
+
+`List of VC plan`
+
+### Declaration
+
+```java
+public class VCPlanList {
+    int count;
+    List<VCPlan> items;
+}
+```
+
+### Property
+
+| Name   | Type             | Description                      | **M/O** | **Note** |
+|--------|------------------|----------------------------------|---------|----------|
+| count  | int              | Number of VC plan list               |    M    |          |
+| items  | List<VCPlan>     | List of VC plan                |    M    | [VCPlan](#621-vcplan) |
+
+<br>
+
+## 6.2.1. VCPlan
+
+### Description
+
+`Details of VC plan`
+
+### Declaration
+
+```java
+public class VCPlan {
+    String vcPlanId;
+    String name;
+    String description;
+    String ref;
+    LogoImage logo;
+    String validFrom;
+    String validUntil;
+    CredentialSchema credentialSchema;
+    Option option;
+    List<String> allowedIssuers;
+    String manager;
+}
+```
+
+### Property
+
+| Name           | Type               | Description                          | **M/O** | **Note** |
+|----------------|--------------------|--------------------------------------|---------|----------|
+| vcPlanId       | String             | VC plan ID          |    M    |          |
+| name           | String             | VC plan name                 |    M    |          |
+| description    | String             | VC plan description           |    M    |          |
+| ref            | String             | Reference ID          |    M    |          |
+| logo           | LogoImage          | Logo image        |    O    | [LogoImage](#53-logoimage) |
+| validFrom      | String             | Validity start date      |    M    |          |
+| validUntil     | String             | Validity end date      |    M    |          |
+| credentialSchema| CredentialSchema  | Credential schema            |    O    |          |
+| option         | Option      | Plan options                         |    O    |          |
+| allowedIssuers | List<String>       | List of issuer DIDs allowed to use the VC plan |    M    |          |
+| manager        | String             | Entity with management authority over the VC plan    |    M    |          |
+
+## 6.2.1.1. Option
+
+### Description
+
+`VC plan Option`
+
+### Declaration
+```java
+public static class Option {
+    boolean allowUserInit;
+    boolean allowIssuerInit;
+    boolean delegatedIssuance;
+}
+```
+
+### Property
+
+| Name         | Type            | Description                         | **M/O** | **Note** |
+|--------------|-----------------|-------------------------------------|---------|----------|
+| allowUserInit        | boolean | Whether user-initiated issuance is allowed                        |    M    |                          |
+| allowIssuerInit | boolean            | Whether issuer-initiated issuance is allowed        |    M    |                                     |
+| delegatedIssuance | boolean            | Whether delegated issuance by a representative issuer is allowed         |    M    |                                     |
+
+<br>
+
+
 # Enumerators
 
 ## 1. DID_KEY_TYPE
@@ -1365,6 +2366,88 @@ public enum VERIFY_AUTH_TYPE {
 
 <br>
 
+## 19. ROLE_TYPE
+
+### Description
+
+`role types`
+
+### Declaration
+
+```java
+public enum ROLE_TYPE {
+    TAS("Tas"),
+    WALLET("Wallet"),
+    ISSUER("Issuer"),
+    VERIFIER("Verifier"),
+    WALLET_PROVIDER("WalletProvider"),
+    APP_PROVIDER("AppProvider"),
+    LIST_PROVIDER("ListProvider"),
+    OP_PROVIDER("OpProvider"),
+    KYC_PROVIDER("KycProvider"),
+    NOTIFICATION_PROVIDER("NotificationProvider"),
+    LOG_PROVIDER("LogProvider"),
+    PORTAL_PROVIDER("PortalProvider"),
+    DELEGATION_PROVIDER("DelegationProvider"),
+    STORAGE_PROVIDER("StorageProvider"),
+    BACKUP_PROVIDER("BackupProvider"),
+    ETC("Etc");
+}
+```
+<br>
+
+## 20. SERVER_TOKEN_PURPOSE
+
+### Description
+
+`Type of server token purposes`
+
+### Declaration
+
+```java
+public enum SERVER_TOKEN_PURPOSE {
+    CREATE_DID(5),
+    UPDATE_DID(6),
+    RESTORE_DID(7),
+    ISSUE_VC(8),
+    REMOVE_VC(9),
+    PRESENT_VP(10),
+    CREATE_DID_AND_ISSUE_VC(13);
+}
+```
+
+<br>
+
+## 21. WALLET_TOKEN_PURPOSE
+
+### Description
+
+`Type of wallet token purposes`
+
+### Declaration
+
+```java
+public enum WALLET_TOKEN_PURPOSE {
+    PERSONALIZE(1),
+    DEPERSONALIZE(2),
+    PERSONALIZE_AND_CONFIGLOCK(3),
+    CONFIGLOCK(4),
+    CREATE_DID(5),
+    UPDATE_DID(6),
+    RESTORE_DID(7),
+    ISSUE_VC(8),
+    REMOVE_VC(9),
+    PRESENT_VP(10),
+    LIST_VC(11),
+    DETAIL_VC(12),
+    CREATE_DID_AND_ISSUE_VC(13),
+    LIST_VC_AND_PRESENT_VP(14);
+}
+```
+
+
+
+
 # APIs
 
 ## 1. deserialize
@@ -1476,3 +2559,10 @@ public static AlgorithmType.ALGORITHM_TYPE convertTo(DID_KEY_TYPE type){
     }
 }
 ```
+
+<br>
+
+
+
+
+

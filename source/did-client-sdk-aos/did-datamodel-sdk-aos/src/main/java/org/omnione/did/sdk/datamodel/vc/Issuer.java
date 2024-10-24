@@ -1,5 +1,17 @@
-/* 
- * Copyright 2024 Raonsecure
+/*
+ * Copyright 2024 OmniOne.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.omnione.did.sdk.datamodel.vc;
@@ -17,10 +29,6 @@ public class Issuer {
     @Expose
     private String name; //option
 
-    @SerializedName("certVcRef")
-    @Expose
-    private String certVcRef; //option
-
     public String getId() {
         return id;
     }
@@ -37,13 +45,6 @@ public class Issuer {
         this.name = name;
     }
 
-    public String getCertVcRef() {
-        return certVcRef;
-    }
-
-    public void setCertVcRef(String certVcRef) {
-        this.certVcRef = certVcRef;
-    }
 
     public void fromJson(String val) {
         Gson gson = new Gson();
@@ -51,6 +52,5 @@ public class Issuer {
 
         this.id = obj.getId();
         this.name = obj.getName();
-        this.certVcRef = obj.getCertVcRef();
     }
 }
